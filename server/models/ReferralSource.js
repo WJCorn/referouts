@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const ReferralSourceSchema = new mongoose.Schema({
-  name: String,
-  state: String,
-  insurances: [String],
-  levels: [String],
+  name: { type: String, required: true },
+  state: { type: String, required: true },
+  insurances: [{ type: String }],
+  levels: [{ type: String }],
   createdAt: { type: Date, default: Date.now }
 });
 
