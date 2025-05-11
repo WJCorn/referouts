@@ -1,52 +1,39 @@
 const express = require('express');
 const cors = require('cors');
-const Provider = require('./models/Provider');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const app = express();
 
 // Load env vars
 dotenv.config();
 
-//Mongoose caboose
-const mongoose = require('mongoose');
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch((err) => console.error("❌ MongoDB connection error:", err));
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Route handlers
 app.use('/referrals', require('./routes/referrals'));
 app.use('/providers', require('./routes/providers'));
-app.use('/test', require('./routes/test')); // test route
+app.use('/test', require('./routes/test'));
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.get('/api/referrals', async (req, res) => {
-  const { insurance, state, levelOfCare } = req.query;
-
-  try {
-    const query = {
-      ...(insurance && { insurances: { $regex: insurance, $options: 'i' } }),
-      ...(state && { state: { $regex: state, $options: 'i' } }),
-      ...(levelOfCare && { levelsOfCare: { $regex: levelOfCare, $options: 'i' } }),
-    };
-
-    const matches = await Provider.find(query).limit(10);
-    res.json(matches);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
+const PORT = process.env.PORT || 8080;
+// Root route to confirm app is running
+app.get('/', (req, res) => {
+  res.send('🚀 Referouts backend is up and running!');
 });
+
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
