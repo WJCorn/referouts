@@ -1,1 +1,0 @@
-// Admin UI to approve providers
