@@ -6,15 +6,19 @@ import SubmitPage from './pages/SubmitPage';
 function App() {
   return (
     <Router>
-      <nav style={{ padding: '1rem', background: '#eee' }}>
-        <Link to="/match" style={{ marginRight: '1rem' }}>Referral Match</Link>
-        <Link to="/submit">Provider Submit</Link>
-      </nav>
-      <Routes>
-        <Route path="/match" element={<MatchPage />} />
-        <Route path="/submit" element={<SubmitPage />} />
-        <Route path="/" element={<div style={{ padding: '2rem' }}><h1>Welcome to Referouts</h1></div>} />
-      </Routes>
+      <div className="p-4 bg-gray-100 min-h-screen font-sans">
+        <nav className="mb-4 space-x-4">
+          <Link to="/" className="text-blue-600 hover:underline">Home</Link>
+          <Link to="/match" className="text-blue-600 hover:underline">Referral Match</Link>
+          <Link to="/submit" className="text-blue-600 hover:underline">Provider Submit</Link>
+        </nav>
+
+        <Routes>
+          <Route path="/match" element={<MatchPage />} />
+          <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/" element={<div className="text-xl">Welcome to Referouts</div>} />
+        </Routes>
+      </div>
     </Router>
   );
 }
