@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const Provider = require('./models/Provider');
 const dotenv = require('dotenv');
 const app = express();
 
@@ -8,7 +9,6 @@ dotenv.config();
 
 //Mongoose caboose
 const mongoose = require('mongoose');
-
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -23,12 +23,30 @@ app.use(express.json());
 // Routes
 app.use('/referrals', require('./routes/referrals'));
 app.use('/providers', require('./routes/providers'));
+app.use('/test', require('./routes/test')); // test route
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
 
 // Start server
 const PORT = process.env.PORT || 5000;
+app.get('/api/referrals', async (req, res) => {
+  const { insurance, state, levelOfCare } = req.query;
+
+  try {
+    const query = {
+      ...(insurance && { insurances: { $regex: insurance, $options: 'i' } }),
+      ...(state && { state: { $regex: state, $options: 'i' } }),
+      ...(levelOfCare && { levelsOfCare: { $regex: levelOfCare, $options: 'i' } }),
+    };
+
+    const matches = await Provider.find(query).limit(10);
+    res.json(matches);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
