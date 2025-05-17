@@ -1,37 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const ReferralSource = require('../models/ReferralSource');
+const Provider = require('../models/Provider');
 
-router.post('/match', async (req, res) => {
-  const { insurance, level, state } = req.body;
+router.get('/', async (req, res) => {
+  const { insurance, state, levelOfCare } = req.query;
 
   try {
-    // Try perfect match first
-    let matches = await ReferralSource.find({
-      insurances: insurance,
-      levels: level,
-      state: state
-    });
+    // Step 1: Try to find exact matches
+    const primaryQuery = {
+      ...(insurance && { insurances: { $regex: insurance, $options: 'i' } }),
+      ...(state && { state: { $regex: state, $options: 'i' } }),
+      ...(levelOfCare && { levelsOfCare: { $regex: levelOfCare, $options: 'i' } }),
+    };
 
-    // If no perfect match, try same insurance + level only
-    if (matches.length === 0) {
-      matches = await ReferralSource.find({
-        insurances: insurance,
-        levels: level
-      });
+    const matches = await Provider.find(primaryQuery).limit(10);
+
+    if (matches.length > 0) {
+      return res.json(matches);
     }
 
-    // Final fallback: match by level only
-    if (matches.length === 0) {
-      matches = await ReferralSource.find({
-        levels: level
-      });
-    }
+    // Step 2: Fallback — match by insurance + levelOfCare only
+    const fallbackQuery = {
+      ...(insurance && { insurances: { $regex: insurance, $options: 'i' } }),
+      ...(levelOfCare && { levelsOfCare: { $regex: levelOfCare, $options: 'i' } }),
+    };
 
-    res.json({ results: matches });
+    const fallbackMatches = await Provider.find(fallbackQuery).limit(5);
+    res.json(fallbackMatches);
+
   } catch (err) {
-    console.error('❌ Match error:', err);
-    res.status(500).json({ message: '❌ Matching failed' });
+    console.error('❌ Referral match error:', err);
+    res.status(500).json({ message: '❌ Server error matching referrals' });
   }
 });
 
