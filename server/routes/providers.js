@@ -1,24 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const ReferralSource = require('../models/ReferralSource');
+const Provider = require('../models/Provider');
 
-router.post('/submit', async (req, res) => {
+// Create a new provider
+router.post('/', async (req, res) => {
   try {
-    const { name, state, insurances, levels } = req.body;
+    const { name, state, insurances, levelsOfCare } = req.body;
 
-    const provider = new ReferralSource({
+    const provider = new Provider({
       name,
       state,
-      insurances: insurances.split(',').map(i => i.trim()),
-      levels: levels.split(',').map(l => l.trim())
+      insurances: insurances.map(i => i.trim()),
+      levelsOfCare: levelsOfCare.map(l => l.trim()),
     });
 
-    await provider.save();
-
-    res.json({ message: '✅ Provider submitted successfully' });
+    const saved = await provider.save();
+    res.status(201).json({ message: '✅ Provider saved successfully', data: saved });
   } catch (err) {
-    console.error('❌ MongoDB save error:', err);
-    res.status(500).json({ message: '❌ Failed to submit provider' });
+    console.error('❌ Error saving provider:', err);
+    res.status(500).json({ message: '❌ Failed to save provider' });
+  }
+});
+
+// (Optional) Get all providers
+router.get('/', async (req, res) => {
+  try {
+    const providers = await Provider.find();
+    res.json(providers);
+  } catch (err) {
+    console.error('❌ Error fetching providers:', err);
+    res.status(500).json({ message: '❌ Failed to fetch providers' });
   }
 });
 

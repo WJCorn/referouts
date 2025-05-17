@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MatchPage from "./pages/MatchPage";
+import SubmitPage from "./pages/SubmitPage";
+
 
 function App() {
   useEffect(() => {
@@ -29,6 +31,7 @@ function App() {
             }
           />
           <Route path="/match" element={<MatchPage />} />
+          <Route path="/submit" element={<SubmitPage />} />
         </Routes>
       </div>
     </BrowserRouter>
