@@ -5,10 +5,9 @@ export default function SubmitPage() {
     name: "",
     state: "",
     insurances: "",
-    levelsOfCare: "",
+    levelsOfCare: ""
   });
-
-  const [status, setStatus] = useState(null);
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,75 +15,72 @@ export default function SubmitPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus(null);
-
-    const body = {
-      name: form.name,
-      state: form.state,
-      insurances: form.insurances.split(",").map(i => i.trim()),
-      levelsOfCare: form.levelsOfCare.split(",").map(l => l.trim()),
-    };
+    setMessage("");
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/providers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(form)
       });
 
-      if (!res.ok) throw new Error("Failed to submit");
+      const data = await res.json();
 
-      setForm({ name: "", state: "", insurances: "", levelsOfCare: "" });
-      setStatus("✅ Submitted successfully!");
+      if (res.ok) {
+        setMessage(data.message || "✅ Submitted successfully");
+        setForm({ name: "", state: "", insurances: "", levelsOfCare: "" });
+      } else {
+        setMessage(data.message || "❌ Submission failed");
+      }
     } catch (err) {
-      console.error("❌ Submission error:", err);
-      setStatus("❌ Error submitting. Please try again.");
+      console.error("❌ Error submitting:", err);
+      setMessage("❌ Network error");
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Submit a Provider</h1>
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Submit Your Facility</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           name="name"
-          placeholder="Facility Name"
           value={form.name}
           onChange={handleChange}
-          className="w-full border p-2"
+          placeholder="Facility Name"
           required
+          className="w-full border p-2"
         />
         <input
           type="text"
           name="state"
-          placeholder="State"
           value={form.state}
           onChange={handleChange}
-          className="w-full border p-2"
+          placeholder="State (e.g., FL)"
           required
+          className="w-full border p-2"
         />
         <input
           type="text"
           name="insurances"
-          placeholder="Insurances (comma-separated)"
           value={form.insurances}
           onChange={handleChange}
+          placeholder="Accepted Insurances (comma-separated)"
           className="w-full border p-2"
         />
         <input
           type="text"
           name="levelsOfCare"
-          placeholder="Levels of Care (comma-separated)"
           value={form.levelsOfCare}
           onChange={handleChange}
+          placeholder="Levels of Care (comma-separated)"
           className="w-full border p-2"
         />
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
           Submit
         </button>
       </form>
-      {status && <p className="mt-4">{status}</p>}
+      {message && <p className="mt-4 font-semibold">{message}</p>}
     </div>
   );
 }
