@@ -23,17 +23,18 @@ app.use(express.json());
 app.use('/referrals', require('./routes/referrals'));
 app.use('/providers', require('./routes/providers'));
 app.use('/test', require('./routes/test'));
+app.use('/api/seed', require('./routes/seed')); // ← add this line
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
 
-// Start server
-const PORT = process.env.PORT || 8080;
 // Root route to confirm app is running
 app.get('/', (req, res) => {
   res.send('🚀 Referouts backend is up and running!');
 });
 
+// Start server
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
