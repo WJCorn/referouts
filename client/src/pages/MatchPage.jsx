@@ -1,88 +1,83 @@
 import { useState } from "react";
 
 export default function MatchPage() {
-  const [form, setForm] = useState({ insurance: "", state: "", levelOfCare: "" });
+  const [form, setForm] = useState({
+    state: "",
+    insurance: "",
+    levelOfCare: "",
+  });
+
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     setResults([]);
-    setError(null);
-
-    const params = new URLSearchParams(form).toString();
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/referrals?${params}`);
-      if (!res.ok) throw new Error("Failed to fetch referrals");
-
+      const params = new URLSearchParams(form);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/referrals?${params}`);
       const data = await res.json();
       setResults(data);
     } catch (err) {
-      setError("Could not retrieve referrals. Please try again.");
-      console.error("❌ Fetch error:", err);
+      console.error("❌ Error fetching matches:", err);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+  console.log("✅ MatchPage is rendering");
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Find a Referral Match</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Find Referral Matches</h1>
+      <form onSubmit={handleSearch} className="space-y-4">
         <input
           type="text"
-          name="insurance"
-          placeholder="Insurance"
-          value={form.insurance}
+          name="state"
+          value={form.state}
           onChange={handleChange}
+          placeholder="State"
           className="w-full border p-2"
         />
         <input
           type="text"
-          name="state"
-          placeholder="State"
-          value={form.state}
+          name="insurance"
+          value={form.insurance}
           onChange={handleChange}
+          placeholder="Insurance"
           className="w-full border p-2"
         />
         <input
           type="text"
           name="levelOfCare"
-          placeholder="Level of Care"
           value={form.levelOfCare}
           onChange={handleChange}
+          placeholder="Level of Care"
           className="w-full border p-2"
         />
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Match
+          Search
         </button>
       </form>
 
-      {loading && <p className="mt-4">🔄 Loading...</p>}
-      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {loading && <p className="mt-4 text-gray-600">Searching...</p>}
 
       {results.length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Results:</h2>
-          <ul className="space-y-2">
-            {results.map((provider, i) => (
-              <li key={i} className="p-3 border rounded">
-                <p className="font-bold">{provider.name}</p>
-                <p>{provider.state}</p>
-                <p className="text-sm text-gray-600">
-                  {provider.levelsOfCare?.join(", ")} | {provider.insurances?.join(", ")}
-                </p>
-              </li>
-            ))}
-          </ul>
+        <div className="mt-6 space-y-4">
+          <h2 className="text-xl font-semibold">Matches Found:</h2>
+          {results.map((provider, idx) => (
+            <div key={idx} className="border p-4 rounded shadow">
+              <h3 className="text-lg font-bold">{provider.name}</h3>
+              <p>State: {provider.state}</p>
+              <p>Insurances: {provider.insurances?.join(", ")}</p>
+              <p>Levels of Care: {provider.levelsOfCare?.join(", ")}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>
