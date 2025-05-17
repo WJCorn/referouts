@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import MatchPage from "./MatchPage";
 import SubmitPage from "./SubmitPage";
+import ProvidersPage from "./ProvidersPage";
+
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
           <Link to="/" className="text-blue-500 hover:underline">Home</Link>
           <Link to="/match" className="text-blue-500 hover:underline">Match</Link>
           <Link to="/submit" className="text-blue-500 hover:underline">Submit</Link>
+          <Link to="/providers" className="text-blue-500 hover:underline">All Providers</Link>
         </nav>
 
         {/* Page Routing */}
@@ -20,6 +23,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/match" element={<MatchPage />} />
           <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/providers" element={<ProvidersPage />} />
         </Routes>
       </div>
     </Router>

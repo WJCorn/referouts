@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Provider = require('../models/Provider');
 
+// POST /providers — Submit a new provider
 router.post('/', async (req, res) => {
   try {
     const {
@@ -29,6 +30,17 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('❌ Error saving provider:', err);
     res.status(500).json({ message: '❌ Server error while saving provider' });
+  }
+});
+
+// GET /providers — Return all providers
+router.get('/', async (req, res) => {
+  try {
+    const providers = await Provider.find().sort({ createdAt: -1 });
+    res.json(providers);
+  } catch (err) {
+    console.error('❌ Error fetching providers:', err);
+    res.status(500).json({ message: '❌ Server error fetching providers' });
   }
 });
 
