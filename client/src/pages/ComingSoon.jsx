@@ -1,4 +1,3 @@
-// client/src/pages/ComingSoon.jsx
 export default function ComingSoon() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center px-4">
