@@ -2,7 +2,7 @@ export default function ComingSoon() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 text-center">
       <h1 className="text-5xl md:text-7xl font-semibold tracking-tight mb-6">
-        Referouts
+        ReferOuts.
       </h1>
       <p className="text-lg md:text-2xl text-gray-400 max-w-xl mb-8">
         A smarter way to route referrals and find care. We're launching soon.
