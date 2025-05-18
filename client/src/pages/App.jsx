@@ -1,40 +1,38 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import MatchPage from "./MatchPage";
-import SubmitPage from "./SubmitPage";
-import ProvidersPage from "./ProvidersPage";
-
+import { Routes, Route, Link } from "react-router-dom";
+import MatchPage from "./pages/MatchPage";
+import SubmitPage from "./pages/SubmitPage";
+import ProvidersPage from "./pages/ProvidersPage";
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/clerk-react";
 
 export default function App() {
   return (
-    <Router>
-      <div className="p-8 text-center text-xl text-gray-700">
-        <h1 className="text-3xl font-bold text-blue-600 mb-6">Welcome to Referouts</h1>
+    <div className="p-8">
+      <nav className="mb-6 space-x-4">
+        <Link to="/" className="text-blue-600 font-bold">Referouts</Link>
+        <Link to="/match">Match</Link>
+        <Link to="/submit">Submit</Link>
+        <SignedIn>
+          <Link to="/providers">Admin</Link>
+          <SignOutButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+      </nav>
 
-        {/* Navigation */}
-        <nav className="space-x-4 mb-6">
-          <Link to="/" className="text-blue-500 hover:underline">Home</Link>
-          <Link to="/match" className="text-blue-500 hover:underline">Match</Link>
-          <Link to="/submit" className="text-blue-500 hover:underline">Submit</Link>
-          <Link to="/providers" className="text-blue-500 hover:underline">All Providers</Link>
-        </nav>
-
-        {/* Page Routing */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/match" element={<MatchPage />} />
-          <Route path="/submit" element={<SubmitPage />} />
-          <Route path="/providers" element={<ProvidersPage />} />
-        </Routes>
-      </div>
-    </Router>
-  );
-}
-
-// Inline Home Component
-function Home() {
-  return (
-    <div>
-      <p>This is the homepage. Use the navigation above to search referrals.</p>
+      <Routes>
+        <Route path="/" element={<p>Welcome to Referouts</p>} />
+        <Route path="/match" element={<MatchPage />} />
+        <Route path="/submit" element={<SubmitPage />} />
+        <Route
+          path="/providers"
+          element={
+            <SignedIn>
+              <ProvidersPage />
+            </SignedIn>
+          }
+        />
+      </Routes>
     </div>
   );
 }
