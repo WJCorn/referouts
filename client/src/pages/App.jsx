@@ -1,12 +1,12 @@
 import { Routes, Route, Link } from "react-router-dom";
 import MatchPage from "./pages/MatchPage";
 import SubmitPage from "./pages/SubmitPage";
-import ProvidersPage from "./pages/ProvidersPage";
+import AdminPage from "./pages/AdminPage";
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/clerk-react";
 
 export default function App() {
   return (
-    <div className="p-8">
+    <div className="p-6">
       <nav className="mb-6 space-x-4">
         <Link to="/" className="text-blue-600 font-bold">Referouts</Link>
         <Link to="/match">Match</Link>
@@ -28,7 +28,7 @@ export default function App() {
           path="/providers"
           element={
             <SignedIn>
-              <ProvidersPage />
+              <AdminPage />
             </SignedIn>
           }
         />
