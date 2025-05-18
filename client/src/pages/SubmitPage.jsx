@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function SubmitPage() {
   const [form, setForm] = useState({
@@ -7,7 +7,10 @@ export default function SubmitPage() {
     insurances: "",
     levelsOfCare: ""
   });
+
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(""); // success or error
+  const topRef = useRef(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,6 +19,8 @@ export default function SubmitPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setStatus("");
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/providers`, {
@@ -27,20 +32,35 @@ export default function SubmitPage() {
       const data = await res.json();
 
       if (res.ok) {
+        setStatus("success");
         setMessage(data.message || "✅ Submitted successfully");
         setForm({ name: "", state: "", insurances: "", levelsOfCare: "" });
       } else {
+        setStatus("error");
         setMessage(data.message || "❌ Submission failed");
       }
     } catch (err) {
       console.error("❌ Error submitting:", err);
+      setStatus("error");
       setMessage("❌ Network error");
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6">
+      <div ref={topRef}></div>
       <h1 className="text-2xl font-bold mb-4">Submit Your Facility</h1>
+
+      {message && (
+        <div
+          className={`p-4 mb-4 rounded text-white ${
+            status === "success" ? "bg-green-600" : "bg-red-600"
+          }`}
+        >
+          {message}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -80,7 +100,6 @@ export default function SubmitPage() {
           Submit
         </button>
       </form>
-      {message && <p className="mt-4 font-semibold">{message}</p>}
     </div>
   );
 }
