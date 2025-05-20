@@ -1,36 +1,35 @@
-// src/pages/ComingSoon.jsx
-
-import { useState } from "react"
+import { useState } from "react";
 
 export default function ComingSoon() {
-  const [email, setEmail] = useState("")
-  const [status, setStatus] = useState("")
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setStatus("Submitting...")
+    e.preventDefault();
+    setStatus("loading");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/early-access`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/notify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
-      })
+      });
 
-      const data = await res.json()
-      setStatus(data.message)
-      setEmail("")
+      if (!res.ok) throw new Error("Email not sent");
+
+      setStatus("success");
+      setEmail("");
     } catch (err) {
-      setStatus("❌ Submission failed. Try again.")
-      console.error(err)
+      console.error(err);
+      setStatus("error");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-black text-white px-6">
       <div className="max-w-2xl w-full text-center">
         <h1 className="text-5xl md:text-6xl font-semibold tracking-tight mb-6">
-          Referouts
+          ReferOuts
         </h1>
         <p className="text-lg md:text-xl text-gray-400 mb-10">
           A smarter way to route referrals and find care.
