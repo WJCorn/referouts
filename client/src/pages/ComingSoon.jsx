@@ -2,23 +2,27 @@ import { useState } from "react";
 
 export default function ComingSoon() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/notify`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/early-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
-      if (!res.ok) throw new Error("Email not sent");
+      const data = await res.json();
 
-      setStatus("success");
-      setEmail("");
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus(data.message || "error");
+      }
     } catch (err) {
       console.error(err);
       setStatus("error");
@@ -26,45 +30,36 @@ export default function ComingSoon() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-black text-white px-6">
-      <div className="max-w-2xl w-full text-center">
-        <h1 className="text-5xl md:text-6xl font-semibold tracking-tight mb-6">
-          ReferOuts
-        </h1>
-        <p className="text-lg md:text-xl text-gray-400 mb-10">
-          A smarter way to route referrals and find care.
-          <br className="hidden md:inline" />
-          Signup for early access.
+    <div className="flex items-center justify-center min-h-screen bg-black text-white px-6">
+      <div className="max-w-xl w-full text-center">
+        <h1 className="text-5xl md:text-6xl font-semibold mb-4">Referouts</h1>
+        <p className="text-xl md:text-2xl text-gray-300 mb-8">
+          Smarter Referrals. Better Outcomes.<br />
+          We’re launching soon.
         </p>
-
-        {/* Early Access Form */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const email = e.target.email.value;
-            alert(`You're on the early access list, ${email}`);
-            e.target.reset();
-          }}
-          className="flex flex-col sm:flex-row items-center gap-4 justify-center"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 justify-center">
           <input
             type="email"
-            name="email"
-            placeholder="Business email"
+            placeholder="Enter your work email"
+            className="px-4 py-2 rounded w-full sm:w-80 text-black"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full sm:w-80 px-5 py-3 bg-black border border-gray-700 text-white placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-white"
           />
           <button
             type="submit"
-            className="px-6 py-3 bg-white text-black rounded-md font-medium hover:bg-gray-200 transition"
+            className="bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition"
+            disabled={status === "loading"}
           >
-            Request Access
+            {status === "loading" ? "Submitting..." : "Notify Me"}
           </button>
         </form>
-
-        <p className="mt-14 text-sm text-gray-600">
-          &copy; {new Date().getFullYear()} Referouts. All rights reserved.
-        </p>
+        {status === "success" && (
+          <p className="mt-4 text-green-400">Thanks! We'll be in touch soon.</p>
+        )}
+        {status && status !== "success" && status !== "loading" && (
+          <p className="mt-4 text-red-400">{status}</p>
+        )}
       </div>
     </div>
   );

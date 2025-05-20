@@ -2,45 +2,41 @@ const express = require('express');
 const router = express.Router();
 const Provider = require('../models/Provider');
 
-// POST /providers — Submit a new provider
+// POST /providers
 router.post('/', async (req, res) => {
   try {
     const {
       name,
-      state,
-      insurances,
-      levelsOfCare
+      contactEmail,
+      phone,
+      website,
+      insuranceAccepted,
+      levelsOfCare,
+      address,
+      notes
     } = req.body;
+
+    if (!name || !contactEmail) {
+      return res.status(400).json({ error: 'Name and contact email are required.' });
+    }
 
     const newProvider = new Provider({
       name,
-      state,
-      insurances: Array.isArray(insurances)
-        ? insurances
-        : insurances.split(',').map(i => i.trim()),
-
-      levelsOfCare: Array.isArray(levelsOfCare)
-        ? levelsOfCare
-        : levelsOfCare.split(',').map(l => l.trim())
+      contactEmail,
+      phone,
+      website,
+      insuranceAccepted,
+      levelsOfCare,
+      address,
+      notes
     });
 
     await newProvider.save();
-    res.json({ message: '✅ Provider submitted successfully' });
 
+    res.status(201).json({ message: 'Provider submitted successfully.' });
   } catch (err) {
-    console.error('❌ Error saving provider:', err);
-    res.status(500).json({ message: '❌ Server error while saving provider' });
-  }
-});
-
-// GET /providers — Return all providers
-router.get('/', async (req, res) => {
-  try {
-    const providers = await Provider.find().sort({ createdAt: -1 });
-    res.json(providers);
-  } catch (err) {
-    console.error('❌ Error fetching providers:', err);
-    res.status(500).json({ message: '❌ Server error fetching providers' });
+    console.error('Error submitting provider:', err);
+    res.status(500).json({ error: 'Server error submitting provider.' });
   }
 });
 

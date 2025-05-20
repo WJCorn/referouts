@@ -24,7 +24,7 @@ app.use('/referrals', require('./routes/referrals'));
 app.use('/providers', require('./routes/providers'));
 app.use('/test', require('./routes/test'));
 app.use('/api/seed', require('./routes/seed'));
-app.use('/early-access', require('./routes/notify'))
+app.use('/api/early-signup', require('./routes/earlySignup'));
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
