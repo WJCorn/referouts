@@ -10,8 +10,8 @@ const ProviderSchema = new mongoose.Schema({
   address: {
     street: String,
     city: String,
-    state: String,
-    zip: String,
+    state: { type: String, index: true },
+    zip: { type: String, index: true },
   },
   notes: String,
   createdAt: { type: Date, default: Date.now },
