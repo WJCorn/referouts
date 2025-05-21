@@ -4,6 +4,7 @@ import FacilityProfile from './pages/FacilityProfile';
 import NewFacility from './pages/NewFacility';
 import NewProvider from './pages/NewProvider';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './pages/AdminDashboard';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
@@ -33,6 +34,15 @@ function App() {
           element={
             <ProtectedRoute>
               <NewProvider />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
