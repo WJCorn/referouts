@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ComingSoon from './pages/ComingSoon';
 import ProviderProfile from './pages/ProviderProfile';
 import FacilityProfile from './pages/FacilityProfile';
@@ -19,7 +19,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/directory" replace />} />
+        {/* Only render this after Coming Soon is disabled */}
+        <Route path="/" element={<Directory />} />
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/directory" element={<Directory />} />

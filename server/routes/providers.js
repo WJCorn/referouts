@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Provider = require('../models/Provider');
+const Facility = require('../models/Facility');
 
 // POST /providers — Create a new provider
 router.post('/', async (req, res) => {
@@ -58,17 +59,19 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /providers — Fetch all providers adds count and sort by creation
-const Facility = require('../models/Facility'); // make sure this is imported
-
+// GET /providers — Fetch all providers with facility counts and sub-facilities
 router.get('/', async (req, res) => {
   try {
     const providers = await Provider.find().sort({ createdAt: -1 }).lean();
 
     const enriched = await Promise.all(
       providers.map(async (p) => {
-        const facilityCount = await Facility.countDocuments({ parentNetwork: p._id });
-        return { ...p, facilityCount };
+        const facilities = await Facility.find({ parentNetwork: p._id }).lean();
+        return {
+          ...p,
+          facilityCount: facilities.length,
+          subFacilities: facilities
+        };
       })
     );
 
