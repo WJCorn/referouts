@@ -1,5 +1,24 @@
-import ComingSoon from "./ComingSoon";
+import ComingSoon from './pages/ComingSoon';
+import ProviderProfile from './pages/ProviderProfile';
+import FacilityProfile from './pages/FacilityProfile';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-export default function App() {
-  return <ComingSoon />;
+const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
+
+function App() {
+  if (COMING_SOON) {
+    return <ComingSoon />;
+  }
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/provider/:id" element={<ProviderProfile />} />
+        <Route path="/facility/:id" element={<FacilityProfile />} />
+        {/* Add other future routes here */}
+      </Routes>
+    </Router>
+  );
 }
+
+export default App;
