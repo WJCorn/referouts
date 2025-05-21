@@ -19,8 +19,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Only render this after Coming Soon is disabled */}
-        <Route path="/" element={<Directory />} />
+        {/* <Route path="/" element={<Directory />} /> */}
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/directory" element={<Directory />} />
