@@ -1,3 +1,4 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ComingSoon from './pages/ComingSoon';
 import ProviderProfile from './pages/ProviderProfile';
 import FacilityProfile from './pages/FacilityProfile';
@@ -5,7 +6,8 @@ import NewFacility from './pages/NewFacility';
 import NewProvider from './pages/NewProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Directory from './pages/Directory';
+import EditProvider from './pages/EditProvider';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
@@ -17,8 +19,10 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to="/directory" replace />} />
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
+        <Route path="/directory" element={<Directory />} />
 
         <Route
           path="/facility/new"
@@ -43,6 +47,15 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/provider/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditProvider />
             </ProtectedRoute>
           }
         />

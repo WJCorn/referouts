@@ -58,13 +58,23 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /providers — Fetch all providers
+// GET /providers — Fetch all providers adds count and sort by creation
+const Facility = require('../models/Facility'); // make sure this is imported
+
 router.get('/', async (req, res) => {
   try {
-    const providers = await Provider.find().sort({ createdAt: -1 });
-    res.json(providers);
+    const providers = await Provider.find().sort({ createdAt: -1 }).lean();
+
+    const enriched = await Promise.all(
+      providers.map(async (p) => {
+        const facilityCount = await Facility.countDocuments({ parentNetwork: p._id });
+        return { ...p, facilityCount };
+      })
+    );
+
+    res.json(enriched);
   } catch (err) {
-    console.error('❌ Error fetching providers:', err);
+    console.error('❌ Error fetching providers with facility counts:', err);
     res.status(500).json({ error: 'Failed to fetch providers.' });
   }
 });
