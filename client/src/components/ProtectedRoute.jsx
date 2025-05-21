@@ -1,6 +1,10 @@
 import { Navigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 
 export default function ProtectedRoute({ children }) {
-  const isAuthorized = localStorage.getItem('referouts_auth') === 'true';
-  return isAuthorized ? children : <Navigate to="/" replace />;
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded) return null; // wait for Clerk to load
+
+  return isSignedIn ? children : <Navigate to="/sign-in" replace />;
 }
