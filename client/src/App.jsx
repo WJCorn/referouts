@@ -2,6 +2,7 @@ import ComingSoon from './pages/ComingSoon';
 import ProviderProfile from './pages/ProviderProfile';
 import FacilityProfile from './pages/FacilityProfile';
 import NewFacility from './pages/NewFacility';
+import NewProvider from './pages/NewProvider';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
@@ -17,6 +18,7 @@ function App() {
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/facility/new" element={<NewFacility />} />
+        <Route path="/provider/new" element={<NewProvider />} />
       </Routes>
     </Router>
   );
