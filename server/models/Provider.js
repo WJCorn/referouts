@@ -1,20 +1,24 @@
+// models/Provider.js
 const mongoose = require('mongoose');
 
 const ProviderSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  isNetwork: { type: Boolean, default: false },
+  logoUrl: String,
+  description: String,
   contactEmail: { type: String, required: true },
   phone: String,
   website: String,
-  insuranceAccepted: [String],
-  levelsOfCare: [String],
   address: {
     street: String,
     city: String,
-    state: { type: String, index: true },
-    zip: { type: String, index: true },
+    state: String,
+    zip: String
   },
-  notes: String,
-  createdAt: { type: Date, default: Date.now },
+  insuranceAccepted: [String],
+  levelsOfCare: [String],
+  services: [String],
+  subFacilities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Facility' }]
 });
 
 module.exports = mongoose.model('Provider', ProviderSchema);
