@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+
 const app = express();
 
 // Load env vars
@@ -20,18 +21,24 @@ app.use(cors());
 app.use(express.json());
 
 // Route handlers
-app.use('/referrals', require('./routes/referrals'));
-app.use('/providers', require('./routes/providers'));
-app.use('/test', require('./routes/test'));
-app.use('/api/seed', require('./routes/seed'));
-app.use('/api/early-signup', require('./routes/earlySignup'));
+const referralsRoute = require('./routes/referrals');
+const providersRoute = require('./routes/providers');
+const facilitiesRoute = require('./routes/facilities');
+const seedRoute = require('./routes/seed');
+const earlySignupRoute = require('./routes/earlySignup');
+const testRoute = require('./routes/test');
+
+app.use('/referrals', referralsRoute);
 app.use('/providers', providersRoute);
 app.use('/facilities', facilitiesRoute);
+app.use('/api/seed', seedRoute);
+app.use('/api/early-signup', earlySignupRoute);
+app.use('/test', testRoute);
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
 
-// Root route to confirm app is running
+// Root route
 app.get('/', (req, res) => {
   res.send('🚀 Referouts backend is up and running!');
 });
