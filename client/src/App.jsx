@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignIn } from '@clerk/clerk-react';
+
 import ComingSoon from './pages/ComingSoon';
 import ProviderProfile from './pages/ProviderProfile';
 import FacilityProfile from './pages/FacilityProfile';
@@ -23,12 +24,20 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/*<Route path="/" element={<Directory />} />*/}
+        <Route path="/" element={<Home />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
-        <Route path="/directory" element={<Directory />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/" element={<Home />} />
+
+        <Route
+          path="/directory"
+          element={
+            <ProtectedRoute>
+              <Directory />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/facility/new"
