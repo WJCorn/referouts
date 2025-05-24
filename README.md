@@ -1,6 +1,6 @@
-# Referouts
+# ReferOuts
 
-**Referouts** is a scalable, cloud-hosted referral matching platform designed for treatment centers and healthcare call centers. It helps staff efficiently route inquiries to appropriate external providers based on location, insurance, and level of care. The project is optimized for B2B networking and is extensible for future social-facing applications.
+**ReferOuts** is a scalable, cloud-hosted referral matching platform designed for treatment centers and healthcare call centers. It helps staff efficiently route inquiries to appropriate external providers based on location, insurance, and level of care. The project is optimized for B2B networking and is extensible for future social-facing applications.
 
 ---
 
@@ -16,7 +16,7 @@
   Designed to give businesses full control over what referral options appear for reps.
 
 - **Provider Profile Submission**  
-  (Planned) Enables facilities to self-submit and maintain their own directory listing.
+  Enables facilities to self-submit and maintain their own directory listing.
 
 - **Built for Call Centers**  
   Primary use case supports call reps handling inbound inquiries when in-network options are unavailable.
