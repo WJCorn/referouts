@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const earlySignupSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  createdAt: { type: Date, default: Date.now },
-  betaInviteSent: { type: Boolean, default: false }
-});
+  name: { type: String, required: true },
+  organization: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String }, // optional
+}, { timestamps: true });
 
 module.exports = mongoose.model('EarlySignup', earlySignupSchema);

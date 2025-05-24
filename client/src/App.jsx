@@ -12,6 +12,7 @@ import Directory from './pages/Directory';
 import EditProvider from './pages/EditProvider';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
+import EarlyAccess from './pages/EarlyAccess';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
@@ -35,6 +36,7 @@ function AppRoutes() {
           }
         />
 
+        <Route path="/early-access" element={<EarlyAccess />} />
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
 
