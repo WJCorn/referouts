@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { SignIn } from '@clerk/clerk-react';
 
 import ComingSoon from './pages/ComingSoon';
@@ -15,18 +15,26 @@ import Navbar from './components/Navbar';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
-function App() {
-  if (COMING_SOON) {
-    return <ComingSoon />;
-  }
+function AppRoutes() {
+  const location = useLocation();
+  const isAuthPage = location.pathname.startsWith('/sign-in');
 
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!isAuthPage && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        
+
+        <Route
+          path="/sign-in"
+          element={
+            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900 px-4">
+              <SignIn />
+            </div>
+          }
+        />
+
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
 
@@ -75,6 +83,16 @@ function App() {
           }
         />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  if (COMING_SOON) return <ComingSoon />;
+
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }
