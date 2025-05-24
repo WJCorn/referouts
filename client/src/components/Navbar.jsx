@@ -12,7 +12,6 @@ export default function Navbar() {
         <div className="flex gap-4 items-center">
           <nav className="flex gap-6 text-sm font-medium text-gray-700 dark:text-gray-300">
             <Link to="/sign-in" className="hover:text-teal-800 dark:hover:text-white transition">Login</Link>
-            <a href="#cta" className="hover:text-teal-800 dark:hover:text-white transition">Request Access</a>
           </nav>
           <DarkModeToggle />
         </div>
