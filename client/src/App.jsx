@@ -9,7 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import Directory from './pages/Directory';
 import EditProvider from './pages/EditProvider';
-import Home from './pages/index';
+import Home from './pages/Home';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
@@ -21,7 +21,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Directory />} />
+        {/*<Route path="/" element={<Directory />} />*/}
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/directory" element={<Directory />} />
