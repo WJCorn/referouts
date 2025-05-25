@@ -24,17 +24,17 @@ export default function Hero() {
       await axios.post('/api/early-signup', form);
       setSubmitted(true);
       setForm({ name: '', organization: '', email: '', phone: '' });
-
-      // auto-collapse form after 1s
       setTimeout(() => setShowForm(false), 1000);
     } catch (err) {
       setError('Something went wrong. Please try again.');
     }
   };
 
+  const inputStyles =
+    'w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500';
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-6 bg-white dark:bg-gray-900 overflow-hidden">
-
       {/* Blurred blob backgrounds */}
       <motion.div
         className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-teal-300 dark:bg-teal-900 rounded-full blur-3xl opacity-30 z-0"
@@ -47,7 +47,6 @@ export default function Hero() {
         transition={{ duration: 12, repeat: Infinity }}
       />
 
-      {/* Main Content */}
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,7 +65,6 @@ export default function Hero() {
         Connect your care teams with the right partners—instantly.
       </motion.p>
 
-      {/* CTA button toggles form */}
       {!submitted && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -83,7 +81,6 @@ export default function Hero() {
         </motion.div>
       )}
 
-      {/* Slide-down form */}
       <AnimatePresence>
         {showForm && !submitted && (
           <motion.form
@@ -102,7 +99,7 @@ export default function Hero() {
               required
               value={form.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className={inputStyles}
             />
             <input
               type="text"
@@ -111,7 +108,7 @@ export default function Hero() {
               required
               value={form.organization}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className={inputStyles}
             />
             <input
               type="email"
@@ -120,7 +117,7 @@ export default function Hero() {
               required
               value={form.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className={inputStyles}
             />
             <input
               type="tel"
@@ -128,7 +125,7 @@ export default function Hero() {
               placeholder="Phone (optional)"
               value={form.phone}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className={inputStyles}
             />
             <button
               type="submit"
