@@ -1,16 +1,23 @@
 export default function LogoOnly(props) {
   return (
     <svg
-      {...props}
-      viewBox="0 0 123 122"
-      fill="none"
+      fill="currentColor"
+      height="1024.000000pt"
+      preserveAspectRatio="xMidYMid meet"
+      version="1.0"
+      viewBox="0 0 1024.000000 1024.000000"
+      width="1024.000000pt"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
-      <circle cx="61.5" cy="61" r="60" stroke="currentColor" strokeWidth="2" />
-      <path
-        d="M52.6667 42.3333C52.6667 38.6515 55.6515 35.6667 59.3333 35.6667H64.5417C68.2235 35.6667 71.2083 38.6515 71.2083 42.3333V79.6667C71.2083 83.3485 68.2235 86.3333 64.5417 86.3333H59.3333C55.6515 86.3333 52.6667 83.3485 52.6667 79.6667V42.3333Z"
-        fill="currentColor"
-      />
+      <g
+        transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
+        fill="#000000"
+        stroke="none"
+      >
+        <path d="M4985 7604 c-149 -16 -314 -39 -393 -55 -418 -85 -838 -323 -1195 -677 ... (truncated)" />
+        <path d="M5050 6650 c-188 -29 -355 -194 -390 -388 -16 -92 0 -186 50 -286 ... (truncated)" />
+      </g>
     </svg>
   );
 }
