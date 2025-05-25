@@ -34,6 +34,7 @@ app.use('/facilities', facilitiesRoute);
 app.use('/api/seed', seedRoute);
 app.use('/api/early-signup', earlySignupRoute);
 app.use('/test', testRoute);
+app.use('/admin', require('./routes/admin'));
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
