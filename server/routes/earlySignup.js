@@ -17,21 +17,25 @@ router.post('/', async (req, res) => {
     const signup = new EarlySignup({ name, organization, email, phone });
     await signup.save();
 
-    // Send email notification via Resend
-    await resend.emails.send({
-      from: process.env.FROM_EMAIL,
-      to: process.env.NOTIFY_EMAIL,
-      subject: '📩 New Early Access Submission',
-      html: `
-        <h2>New Early Access Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Organization:</strong> ${organization}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-      `
-    });
+    // Send email notification via Resend (non-blocking)
+    try {
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL,
+        to: process.env.NOTIFY_EMAIL,
+        subject: '📩 New Early Access Submission',
+        html: `
+          <h2>New Early Access Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Organization:</strong> ${organization}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+        `,
+      });
+    } catch (emailErr) {
+      console.error('❌ Resend failed:', emailErr.message);
+    }
 
-    res.status(201).json({ message: 'Signup saved and notification sent.' });
+    res.status(201).json({ message: 'Signup saved successfully.' });
   } catch (err) {
     console.error('❌ Error in /early-signup:', err);
     res.status(500).json({ error: 'Server error' });
