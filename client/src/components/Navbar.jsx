@@ -12,7 +12,7 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="ReferOuts logo"
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain dark:invert"
             />
           </picture>
         </Link>
