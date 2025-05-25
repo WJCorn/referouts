@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import DarkModeToggle from './DarkModeToggle';
-import { ReactComponent as Logo } from '../assets/LogoOnly.svg';
+import Logo from '../assets/LogoOnly';
 
 export default function Navbar() {
   return (
@@ -9,7 +9,6 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 text-2xl font-semibold tracking-tight dark:text-white">
           <Logo className="h-8 w-auto fill-current text-teal-800 dark:text-white" />
           <span className="text-teal-800 dark:text-white">ReferOuts</span>
-          ReferOuts
         </Link>
 
         <div className="flex gap-4 items-center">

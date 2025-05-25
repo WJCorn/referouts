@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Fix __dirname in native ES module environment
+// Fix __dirname in ES module environment
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
