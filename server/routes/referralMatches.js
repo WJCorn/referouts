@@ -11,13 +11,14 @@ router.get('/matches', apiKeyAuth, async (req, res) => {
   }
 
   try {
+    // Primary match
     const providers = await Provider.find({
-      insuranceAccepted: { $regex: insurance, $options: 'i' },
+      insurances: { $regex: insurance, $options: 'i' },
       levelsOfCare: { $regex: levelOfCare, $options: 'i' },
-      'address.state': { $regex: location, $options: 'i' }
+      state: { $regex: location, $options: 'i' }
     }).limit(10);
 
-    // Optional fallback: loosen criteria if nothing found
+    // Fallback if no full match
     if (providers.length === 0) {
       const fallback = await Provider.find({
         levelsOfCare: { $regex: levelOfCare, $options: 'i' }
@@ -27,7 +28,7 @@ router.get('/matches', apiKeyAuth, async (req, res) => {
 
     res.json({ matches: providers, fallbackUsed: false });
   } catch (err) {
-    console.error('Match lookup failed:', err);
+    console.error("❌ Error in /matches:", err);
     res.status(500).json({ error: 'Server error during match lookup' });
   }
 });
