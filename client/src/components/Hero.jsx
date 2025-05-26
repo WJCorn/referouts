@@ -21,7 +21,8 @@ export default function Hero() {
       setForm({ name: '', organization: '', email: '', phone: '' });
       setTimeout(() => setShowForm(false), 800);
     } catch (err) {
-      setError(err.message);
+      console.error('Submission error:', err);
+      setError(err.message || 'Unknown error occurred.');
     }
   };
 
