@@ -13,6 +13,8 @@ import EditProvider from './pages/EditProvider';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import EarlyAccess from './pages/EarlyAccess';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
@@ -39,6 +41,8 @@ function AppRoutes() {
         <Route path="/early-access" element={<EarlyAccess />} />
         <Route path="/provider/:id" element={<ProviderProfile />} />
         <Route path="/facility/:id" element={<FacilityProfile />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
 
         <Route
           path="/directory"
