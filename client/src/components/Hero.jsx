@@ -20,17 +20,24 @@ export default function Hero() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
     try {
-      await axios.post('/api/early-signup', form);
+      console.log('📨 Submitting:', form);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE || ''}/api/early-signup`,
+        form
+      );
+
+      console.log('✅ Server response:', res.data);
       setSubmitted(true);
       setForm({ name: '', organization: '', email: '', phone: '' });
 
-      // Close form after short delay
-      setTimeout(() => {
-        setShowForm(false);
-      }, 500); // sync with exit animation
+      setTimeout(() => setShowForm(false), 800);
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      const msg = err.response?.data?.error || 'Something went wrong. Please try again.';
+      console.error('❌ Submission error:', msg);
+      setError(msg);
     }
   };
 
@@ -87,7 +94,7 @@ export default function Hero() {
               required
               value={form.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
             <input
               type="text"
@@ -96,7 +103,7 @@ export default function Hero() {
               required
               value={form.organization}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
             <input
               type="email"
@@ -105,7 +112,7 @@ export default function Hero() {
               required
               value={form.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
             <input
               type="tel"
@@ -113,7 +120,7 @@ export default function Hero() {
               placeholder="Phone (optional)"
               value={form.phone}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
             <button
               type="submit"
