@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const referralSendRoute = require('./routes/referralSend');
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use('/api/seed', seedRoute);
 app.use('/api/early-signup', earlySignupRoute);
 app.use('/test', testRoute);
 app.use('/admin', require('./routes/admin'));
+app.use('/api/referrals', referralSendRoute);
+
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
