@@ -23,6 +23,22 @@ router.post('/', async (req, res) => {
   }
 });
 
+// GET /facilities (with optional providerId filter)
+router.get('/', async (req, res) => {
+  try {
+    const query = {};
+    if (req.query.providerId) {
+      query.providerId = req.query.providerId;
+    }
+
+    const facilities = await Facility.find(query);
+    res.json(facilities);
+  } catch (err) {
+    console.error('❌ Error fetching facilities:', err);
+    res.status(500).json({ error: 'Server error fetching facilities.' });
+  }
+});
+
 // GET /facilities/:id
 router.get('/:id', async (req, res) => {
   try {
@@ -34,6 +50,29 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     console.error('❌ Error fetching facility:', err);
     res.status(500).json({ error: 'Server error fetching facility.' });
+  }
+});
+
+// PUT /facilities/:id/link
+router.put('/:id/link', async (req, res) => {
+  try {
+    const { providerId } = req.body;
+    if (!providerId) return res.status(400).json({ error: 'Provider ID is required' });
+
+    const facility = await Facility.findByIdAndUpdate(
+      req.params.id,
+      { providerId },
+      { new: true }
+    );
+
+    if (!facility) {
+      return res.status(404).json({ error: 'Facility not found.' });
+    }
+
+    res.json({ message: '✅ Facility linked to provider.', facility });
+  } catch (err) {
+    console.error('❌ Error linking facility:', err);
+    res.status(500).json({ error: 'Server error linking facility.' });
   }
 });
 

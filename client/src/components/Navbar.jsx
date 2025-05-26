@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useUser, useAuth } from '@clerk/clerk-react';
+import { useUser, useAuth, useClerk } from '@clerk/clerk-react';
 import DarkModeToggle from './DarkModeToggle';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [role, setRole] = useState(null);
-  const { isSignedIn, isLoaded } = useUser();
+  const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const { signOut } = useClerk();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const token = await getToken();
         const res = await fetch(`${import.meta.env.VITE_API_BASE}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
-
         const data = await res.json();
         setRole(data.role);
       } catch (err) {
@@ -37,32 +35,44 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex gap-6 items-center text-sm font-medium text-gray-700 dark:text-gray-300">
-          {isSignedIn && role && (
-            <span className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-200">
-              {role.charAt(0).toUpperCase() + role.slice(1)}
-            </span>
-          )}
-
-          {isSignedIn ? (
+          {isSignedIn && user && (
             <>
-              <div className="flex flex-col items-end">
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Signed in as
-                </span>
-                <span className="text-xs font-semibold text-gray-700 dark:text-white">
-                  {window.Clerk.user?.primaryEmailAddress?.emailAddress || 'Your email'}
-                </span>
+              <div className="flex items-center gap-3">
+                <img
+                  src={user.imageUrl}
+                  alt="User avatar"
+                  className="w-8 h-8 rounded-full border dark:border-gray-600"
+                />
+                <div className="flex flex-col items-start">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Signed in as</span>
+                  <span className="text-xs font-semibold text-gray-700 dark:text-white">{user.primaryEmailAddress?.emailAddress}</span>
+                </div>
               </div>
+
+              {role && (
+                <span className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-200">
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                </span>
+              )}
 
               {role === 'admin' && (
                 <Link to="/admin" className="hover:text-teal-800 dark:hover:text-white transition">Dashboard</Link>
               )}
-              <Link to="/sign-in" className="hover:text-teal-800 dark:hover:text-white transition">Logout</Link>
+
+              <Link to="/profile" className="hover:text-teal-800 dark:hover:text-white transition">Profile</Link>
+
+              <button
+                onClick={signOut}
+                className="hover:text-red-600 dark:hover:text-red-400 transition"
+              >
+                Logout
+              </button>
             </>
-          ) : (
-            <Link to="/sign-in" className="hover:text-teal-800 dark:hover:text-white transition">Login</Link>
           )}
 
+          {!isSignedIn && (
+            <Link to="/sign-in" className="hover:text-teal-800 dark:hover:text-white transition">Login</Link>
+          )}
         </div>
 
         <div className="md:hidden">
@@ -74,19 +84,37 @@ export default function Navbar() {
 
       {mobileOpen && (
         <nav className="md:hidden mt-4 px-6 text-sm text-gray-700 dark:text-gray-300 space-y-2">
-          {isSignedIn && role && (
-            <div className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-200 inline-block">
-              {role}
-            </div>
-          )}
-          {isSignedIn ? (
+          {isSignedIn && user && (
             <>
+              <div className="flex items-center gap-2">
+                <img
+                  src={user.imageUrl}
+                  alt="Avatar"
+                  className="w-6 h-6 rounded-full border"
+                />
+                <div>
+                  <div className="text-xs">Signed in as</div>
+                  <div className="text-xs font-semibold">{user.primaryEmailAddress?.emailAddress}</div>
+                </div>
+              </div>
+
               {role === 'admin' && (
                 <Link to="/admin" onClick={() => setMobileOpen(false)} className="block hover:text-teal-800 dark:hover:text-white">Dashboard</Link>
               )}
-              <Link to="/sign-in" onClick={() => setMobileOpen(false)} className="block hover:text-teal-800 dark:hover:text-white">Logout</Link>
+              <Link to="/profile" onClick={() => setMobileOpen(false)} className="block hover:text-teal-800 dark:hover:text-white">Profile</Link>
+              <button
+                onClick={() => {
+                  signOut();
+                  setMobileOpen(false);
+                }}
+                className="block text-left w-full text-red-600 hover:text-red-800 dark:hover:text-red-400"
+              >
+                Logout
+              </button>
             </>
-          ) : (
+          )}
+
+          {!isSignedIn && (
             <Link to="/sign-in" onClick={() => setMobileOpen(false)} className="block hover:text-teal-800 dark:hover:text-white">Login</Link>
           )}
         </nav>

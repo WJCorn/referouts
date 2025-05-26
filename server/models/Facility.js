@@ -16,7 +16,10 @@ const FacilitySchema = new mongoose.Schema({
   },
   insuranceAccepted: [String],
   levelsOfCare: [String],
-  services: [String]
+  services: [String],
+  providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider', default: null },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now } 
 });
 
 module.exports = mongoose.model('Facility', FacilitySchema);

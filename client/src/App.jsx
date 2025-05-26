@@ -43,6 +43,14 @@ function AppRoutes() {
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
+        
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>} />
+
 
         <Route
           path="/directory"
