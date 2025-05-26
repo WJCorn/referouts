@@ -12,6 +12,8 @@ const seedRoute = require('./routes/seed');
 const earlySignupRoute = require('./routes/earlySignup');
 const testRoute = require('./routes/test');
 const adminRoute = require('./routes/admin');
+const requireClerkAuth = require('../middleware/requireClerkAuth');
+
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.use('/api/seed', seedRoute);
 app.use('/api/early-signup', earlySignupRoute);
 app.use('/test', testRoute);
 app.use('/admin', adminRoute);
+app.use('/api/users', require('./routes/users'));
+
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
