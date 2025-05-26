@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import { submitEarlySignup } from '../services/api'; // adjust the path if needed
 
 export default function Hero() {
   const [showForm, setShowForm] = useState(false);
@@ -23,21 +23,15 @@ export default function Hero() {
 
     try {
       console.log('📨 Submitting:', form);
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE || ''}/api/early-signup`,
-        form
-      );
-
-      console.log('✅ Server response:', res.data);
+      await submitEarlySignup(form);
+      console.log('✅ Signup sent');
       setSubmitted(true);
       setForm({ name: '', organization: '', email: '', phone: '' });
 
       setTimeout(() => setShowForm(false), 800);
     } catch (err) {
-      const msg = err.response?.data?.error || 'Something went wrong. Please try again.';
-      console.error('❌ Submission error:', msg);
-      setError(msg);
+      console.error('❌ Submission error:', err.message);
+      setError(err.message || 'Something went wrong. Please try again.');
     }
   };
 
@@ -87,41 +81,18 @@ export default function Hero() {
             transition={{ duration: 0.4 }}
             className="mt-8 space-y-4 max-w-md w-full text-left"
           >
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              required
-              value={form.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-            />
-            <input
-              type="text"
-              name="organization"
-              placeholder="Organization"
-              required
-              value={form.organization}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-              value={form.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone (optional)"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-            />
+            {['name', 'organization', 'email', 'phone'].map((field) => (
+              <input
+                key={field}
+                type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
+                name={field}
+                required={field !== 'phone'}
+                placeholder={field === 'phone' ? 'Phone (optional)' : `Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
+                value={form[field]}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              />
+            ))}
             <button
               type="submit"
               className="w-full bg-teal-800 text-white px-6 py-2 rounded hover:bg-teal-700 transition"

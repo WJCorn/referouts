@@ -13,3 +13,18 @@ export const seedProviders = async () => {
   if (!res.ok) throw new Error('Seed failed');
   return res.json();
 };
+
+export const submitEarlySignup = async (form) => {
+  const res = await fetch(`${API_BASE}/api/early-signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(form),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error?.error || 'Failed to submit');
+  }
+
+  return res.json();
+};
