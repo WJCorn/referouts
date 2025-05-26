@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { submitEarlySignup } from '../services/api'; // adjust the path if needed
+import axios from 'axios';
 
 export default function Hero() {
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    name: '',
-    organization: '',
-    email: '',
-    phone: '',
-  });
+  const [form, setForm] = useState({ name: '', organization: '', email: '', phone: '' });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
 
@@ -22,16 +17,18 @@ export default function Hero() {
     setError(null);
 
     try {
-      console.log('📨 Submitting:', form);
-      await submitEarlySignup(form);
-      console.log('✅ Signup sent');
+      const endpoint = `${import.meta.env.VITE_API_BASE_URL || ''}/api/early-signup`;
+      const res = await axios.post(endpoint, form);
+
+      console.log('✅ Signup response:', res.data);
       setSubmitted(true);
       setForm({ name: '', organization: '', email: '', phone: '' });
 
       setTimeout(() => setShowForm(false), 800);
     } catch (err) {
-      console.error('❌ Submission error:', err.message);
-      setError(err.message || 'Something went wrong. Please try again.');
+      const msg = err?.response?.data?.error || 'Something went wrong.';
+      console.error('❌ Submission error:', msg);
+      setError(msg);
     }
   };
 
@@ -81,18 +78,19 @@ export default function Hero() {
             transition={{ duration: 0.4 }}
             className="mt-8 space-y-4 max-w-md w-full text-left"
           >
-            {['name', 'organization', 'email', 'phone'].map((field) => (
+            {['name', 'organization', 'email', 'phone'].map((field, i) => (
               <input
                 key={field}
                 type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
                 name={field}
                 required={field !== 'phone'}
-                placeholder={field === 'phone' ? 'Phone (optional)' : `Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
                 value={form[field]}
                 onChange={handleChange}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 className="w-full px-4 py-2 border border-gray-300 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             ))}
+
             <button
               type="submit"
               className="w-full bg-teal-800 text-white px-6 py-2 rounded hover:bg-teal-700 transition"
