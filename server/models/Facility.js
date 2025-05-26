@@ -1,25 +1,27 @@
-// models/Facility.js
 const mongoose = require('mongoose');
 
 const FacilitySchema = new mongoose.Schema({
-  parentNetwork: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider' },
   name: { type: String, required: true },
-  logoUrl: String,
-  contactEmail: String,
-  phone: String,
-  website: String,
   address: {
     street: String,
     city: String,
     state: String,
     zip: String
   },
+  phone: String,
+  email: String,
+  website: String,
   insuranceAccepted: [String],
   levelsOfCare: [String],
   services: [String],
+
+  // 🔗 Links
   providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider', default: null },
+  parentNetwork: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider', default: null },
+
+  // ⏱️ Timestamps
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now } 
+  updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Facility', FacilitySchema);
