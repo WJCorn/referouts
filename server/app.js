@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const referralSendRoute = require('./routes/referralSend');
+const referralMatchesRoute = require('./routes/referralMatches');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/early-signup', earlySignupRoute);
 app.use('/test', testRoute);
 app.use('/admin', require('./routes/admin'));
 app.use('/api/referrals', referralSendRoute);
+app.use('/api/referrals', referralMatchesRoute);
 
 
 // Health check
