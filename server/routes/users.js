@@ -5,23 +5,27 @@ const requireClerkAuth = require('../middleware/requireClerkAuth');
 
 router.get('/me', requireClerkAuth, async (req, res) => {
   try {
-    const { userId, sessionId, getToken, orgId, orgRole } = req.auth;
-    const { emailAddresses } = req.auth.user;
-
-    const email = emailAddresses?.[0]?.emailAddress;
+    const { userId, user } = req.auth;
+    const email = user?.emailAddresses?.[0]?.emailAddress;
+    const name = user?.firstName + ' ' + (user?.lastName || '');
 
     if (!email) return res.status(400).json({ error: 'Email not found from Clerk user' });
 
-    let user = await User.findOne({ email });
+    let existingUser = await User.findOne({ clerkId: userId });
 
-    if (!user) {
-      user = await User.create({ email });
+    if (!existingUser) {
+      existingUser = await User.create({
+        clerkId: userId,
+        email,
+        name,
+        isOnboardingComplete: false
+      });
     }
 
-    res.json(user);
+    res.json(existingUser);
   } catch (err) {
     console.error('Error in /me route:', err);
-    res.status(500).json({ error: 'Failed to fetch user' });
+    res.status(500).json({ error: 'Failed to fetch or create user' });
   }
 });
 
