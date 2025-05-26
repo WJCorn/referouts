@@ -15,6 +15,8 @@ import Navbar from './components/Navbar';
 import EarlyAccess from './pages/EarlyAccess';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import Profile from './pages/Profile';
+
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
