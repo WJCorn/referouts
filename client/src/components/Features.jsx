@@ -1,21 +1,43 @@
 import { motion } from 'framer-motion';
-import { Ban, CheckCircle, Timer } from 'lucide-react';
+import {
+  SlidersHorizontal,
+  Building2,
+  FolderGit2,
+  Users,
+  Share2,
+  Settings2,
+} from 'lucide-react';
 
 const features = [
   {
-    title: "Inefficient referrals",
-    desc: "Say goodbye to manual, time-consuming processes",
-    icon: <Ban size={32} className="text-teal-800 mx-auto mb-4" />,
+    title: "Smart Referral Matching",
+    desc: "Accepts inputs like insurance, state, and level of care to suggest the most relevant facilities.",
+    icon: <SlidersHorizontal size={32} className="text-teal-800 mx-auto mb-4" />,
   },
   {
-    title: "Streamlined matching",
-    desc: "Find the best providers for your patients’ needs",
-    icon: <CheckCircle size={32} className="text-teal-800 mx-auto mb-4" />,
+    title: "B2B Directory",
+    desc: "All provider data is indexable for performance and geolocation matching.",
+    icon: <FolderGit2 size={32} className="text-teal-800 mx-auto mb-4" />,
   },
   {
-    title: "Automated tracking",
-    desc: "Monitor referral progress from start to finish",
-    icon: <Timer size={32} className="text-teal-800 mx-auto mb-4" />,
+    title: "Customizable Results Weighting",
+    desc: "Designed to give businesses full control over what referral options appear.",
+    icon: <Settings2 size={32} className="text-teal-800 mx-auto mb-4" />,
+  },
+  {
+    title: "Provider Profile Submission",
+    desc: "Enables facilities to self-submit and maintain their own directory listing.",
+    icon: <Building2 size={32} className="text-teal-800 mx-auto mb-4" />,
+  },
+  {
+    title: "Built for Call Centers",
+    desc: "Primary use case supports call reps handling inbound inquiries when options are unavailable.",
+    icon: <Users size={32} className="text-teal-800 mx-auto mb-4" />,
+  },
+  {
+    title: "White-label Friendly",
+    desc: "Architecture supports multi-tenant licensing and isolated deployments.",
+    icon: <Share2 size={32} className="text-teal-800 mx-auto mb-4" />,
   },
 ];
 
@@ -29,10 +51,10 @@ export default function Features() {
         viewport={{ once: true }}
         className="text-center text-3xl font-serif mb-12"
       >
-        How It Works
+        Features
       </motion.h2>
 
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
         {features.map(({ title, desc, icon }) => (
           <motion.div
             key={title}
@@ -43,7 +65,7 @@ export default function Features() {
           >
             {icon}
             <h3 className="text-xl font-semibold">{title}</h3>
-            <p className="text-gray-600">{desc}</p>
+            <p className="text-gray-600 dark:text-gray-300">{desc}</p>
           </motion.div>
         ))}
       </div>
