@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import { submitEarlySignup } from '../services/api';
 
 export default function Hero() {
   const [showForm, setShowForm] = useState(false);
@@ -15,20 +15,13 @@ export default function Hero() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
     try {
-      const endpoint = `${import.meta.env.VITE_API_BASE_URL || ''}/api/early-signup`;
-      const res = await axios.post(endpoint, form);
-
-      console.log('✅ Signup response:', res.data);
+      await submitEarlySignup(form);
       setSubmitted(true);
       setForm({ name: '', organization: '', email: '', phone: '' });
-
       setTimeout(() => setShowForm(false), 800);
     } catch (err) {
-      const msg = err?.response?.data?.error || 'Something went wrong.';
-      console.error('❌ Submission error:', msg);
-      setError(msg);
+      setError(err.message);
     }
   };
 
@@ -78,7 +71,7 @@ export default function Hero() {
             transition={{ duration: 0.4 }}
             className="mt-8 space-y-4 max-w-md w-full text-left"
           >
-            {['name', 'organization', 'email', 'phone'].map((field, i) => (
+            {['name', 'organization', 'email', 'phone'].map((field) => (
               <input
                 key={field}
                 type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
