@@ -15,9 +15,7 @@ const adminRoute = require('./routes/admin');
 const usersRoute = require('./routes/users');
 const importCsvRoute = require('./routes/import/csv');
 const importSfRoute = require('./routes/import/salesforce');
-const referralMatchesRoute = require('./routes/referralMatches');
 const matchWeightsRoute = require('./routes/admin/matchWeights');
-
 
 const app = express();
 
@@ -42,7 +40,6 @@ app.use('/api/referrals', referralMatchesRoute);
 app.use('/api/seed', seedRoute);
 app.use('/api/early-signup', earlySignupRoute);
 app.use('/api/users', usersRoute);
-app.use('/api/referrals', referralMatchesRoute);
 
 // === 🔁 Open Routes ===
 app.use('/referrals', referralsRoute);
@@ -50,9 +47,9 @@ app.use('/providers', providersRoute);
 app.use('/facilities', facilitiesRoute);
 app.use('/test', testRoute);
 app.use('/admin', adminRoute);
+app.use('/admin', matchWeightsRoute);
 app.use('/import/csv', importCsvRoute);
 app.use('/import/salesforce', importSfRoute);
-app.use('/admin', matchWeightsRoute);
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
