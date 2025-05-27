@@ -1,7 +1,7 @@
 const Facility = require('../models/Facility');
+const MatchWeight = require('../models/MatchWeight');
 const getDistanceMiles = require('./getDistanceMiles');
 
-// Main matching engine function
 async function matchFacilities(referral) {
   const {
     insurance,
@@ -12,6 +12,13 @@ async function matchFacilities(referral) {
     inNetworkOnly = false
   } = referral;
 
+  const ORG_ID = 'demoOrg'; // TODO: Replace with session/org context
+  const weights = await MatchWeight.findOne({ orgId: ORG_ID }) || {
+    insurance: 30,
+    levelOfCare: 30,
+    distance: 40
+  };
+
   const facilities = await Facility.find();
   const results = [];
 
@@ -19,26 +26,23 @@ async function matchFacilities(referral) {
     let score = 0;
     const reasons = [];
 
-    // In-network filtering
     const acceptsInsurance = facility.insuranceAccepted?.includes(insurance);
 
-    if (inNetworkOnly && !acceptsInsurance) {
-      continue; // skip this facility entirely
-    }
+    if (inNetworkOnly && !acceptsInsurance) continue;
 
-    // Score insurance
+    // Insurance match
     if (acceptsInsurance) {
-      score += 30;
+      score += weights.insurance;
       reasons.push('Accepted Insurance');
     }
 
-    // Score level of care
+    // Level of care match
     if (facility.levelsOfCare?.includes(levelOfCare)) {
-      score += 30;
+      score += weights.levelOfCare;
       reasons.push('Matching Level of Care');
     }
 
-    // Proximity score (if all coords exist)
+    // Proximity score
     let distance = null;
     if (
       refLat != null &&
@@ -48,11 +52,9 @@ async function matchFacilities(referral) {
     ) {
       distance = getDistanceMiles(refLat, refLon, facility.latitude, facility.longitude);
 
-      if (distance > maxDistance) {
-        continue; // skip if too far
-      }
+      if (distance > maxDistance) continue;
 
-      const proximityScore = Math.max(0, 40 - distance);
+      const proximityScore = Math.max(0, weights.distance - distance);
       score += proximityScore;
       reasons.push(`Within ${distance.toFixed(1)} miles`);
     } else {

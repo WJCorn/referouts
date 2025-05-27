@@ -76,4 +76,24 @@ router.put('/:id/link', async (req, res) => {
   }
 });
 
+// ✅ PUT /facilities/:id – Update facility by ID
+router.put('/:id', async (req, res) => {
+  try {
+    const updated = await Facility.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Facility not found.' });
+    }
+
+    res.json({ message: '✅ Facility updated successfully.', facility: updated });
+  } catch (err) {
+    console.error('❌ Error updating facility:', err);
+    res.status(500).json({ error: 'Server error updating facility.' });
+  }
+});
+
 module.exports = router;

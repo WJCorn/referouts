@@ -47,6 +47,9 @@ function AppRoutes() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/import-csv" element={<ImportCSV />} />
         <Route path="/referral" element={<ReferralForm />} />
+        <Route path="/admin/match-weights" element={<MatchWeights />} />
+        <Route path="/facilities/:id" element={<EditFacility />} />
+
 
         
         <Route 
