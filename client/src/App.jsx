@@ -16,7 +16,12 @@ import EarlyAccess from './pages/EarlyAccess';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Profile from './pages/Profile';
+import ReferralForm from './pages/ReferralForm';
+import MatchWeights from './pages/MatchWeights';
+import EditFacility from './pages/EditFacility';
 
+// Optional: placeholder or remove if not building CSV now
+// import ImportCSV from './pages/ImportCSV';
 
 const COMING_SOON = import.meta.env.VITE_COMING_SOON === 'true';
 
@@ -45,21 +50,19 @@ function AppRoutes() {
         <Route path="/facility/:id" element={<FacilityProfile />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/import-csv" element={<ImportCSV />} />
         <Route path="/referral" element={<ReferralForm />} />
         <Route path="/admin/match-weights" element={<MatchWeights />} />
         <Route path="/facilities/:id" element={<EditFacility />} />
 
-
-        
-        <Route 
-          path="/profile" 
+        {/* 🔒 Protected Routes */}
+        <Route
+          path="/profile"
           element={
             <ProtectedRoute>
               <Profile />
-            </ProtectedRoute>} />
-
-
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/directory"
           element={
@@ -68,7 +71,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/facility/new"
           element={
@@ -77,7 +79,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/provider/new"
           element={
@@ -86,7 +87,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin"
           element={
@@ -95,7 +95,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/provider/:id/edit"
           element={
@@ -104,6 +103,9 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* 🚫 Removed or commented out until implemented */}
+        {/* <Route path="/import-csv" element={<ImportCSV />} /> */}
       </Routes>
     </>
   );
