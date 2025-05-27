@@ -46,6 +46,7 @@ function AppRoutes() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/import-csv" element={<ImportCSV />} />
+        <Route path="/referral" element={<ReferralForm />} />
 
         
         <Route 

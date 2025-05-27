@@ -3,93 +3,90 @@ import { Link } from 'react-router-dom';
 
 export default function AdminDashboard() {
   const [providers, setProviders] = useState([]);
+  const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const fetchProviders = async () => {
+    const fetchAll = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/providers`);
-        const data = await res.json();
-        setProviders(data);
+        const [provRes, facRes] = await Promise.all([
+          fetch(`${import.meta.env.VITE_API_BASE}/providers`),
+          fetch(`${import.meta.env.VITE_API_BASE}/facilities`)
+        ]);
+
+        const provData = await provRes.json();
+        const facData = await facRes.json();
+
+        setProviders(provData);
+        setFacilities(facData);
       } catch (err) {
-        console.error('Error fetching providers:', err);
-        setError('Failed to load providers.');
+        console.error('Failed to load admin data:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchProviders();
+
+    fetchAll();
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this provider?");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/providers/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (res.ok) {
-        setProviders((prev) => prev.filter((p) => p._id !== id));
-      } else {
-        alert('Failed to delete provider.');
-      }
-    } catch (err) {
-      console.error('Error deleting provider:', err);
-      alert('Server error during delete.');
-    }
-  };
+  const filtered = facilities.filter(f =>
+    f.name?.toLowerCase().includes(search.toLowerCase()) ||
+    f.address?.city?.toLowerCase().includes(search.toLowerCase()) ||
+    f.address?.state?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-white">📊 Admin Dashboard</h1>
+    <div className="p-8 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
-      {loading ? (
-        <p className="text-center text-gray-500 dark:text-gray-400">Loading providers...</p>
-      ) : error ? (
-        <p className="text-center text-red-600 dark:text-red-400">{error}</p>
-      ) : providers.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400">No providers found.</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {providers.map((provider) => (
-            <div
-              key={provider._id}
-              className="border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white dark:bg-gray-800"
-            >
-              <h2 className="text-xl font-medium mb-1 text-gray-900 dark:text-white">
-                {provider.name}
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                {provider.isNetwork ? 'Network Provider' : 'Single Facility'}
-              </p>
-
-              <div className="flex flex-col gap-1 text-sm">
-                <Link
-                  to={`/provider/${provider._id}`}
-                  className="text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  View Profile →
-                </Link>
-                <Link
-                  to={`/admin/provider/${provider._id}/edit`}
-                  className="text-green-600 hover:underline dark:text-green-400"
-                >
-                  Edit Provider →
-                </Link>
-                <button
-                  onClick={() => handleDelete(provider._id)}
-                  className="text-red-500 hover:underline text-left dark:text-red-400"
-                >
-                  Delete Provider
-                </button>
-              </div>
-            </div>
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-2">Providers</h2>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {providers.map(provider => (
+            <li key={provider._id} className="border p-4 rounded shadow bg-white dark:bg-gray-900">
+              <h3 className="text-lg font-bold">{provider.name}</h3>
+              <p className="text-sm text-gray-500">{provider.email}</p>
+              <Link
+                to={`/providers/${provider._id}`}
+                className="text-blue-600 hover:underline text-sm mt-2 inline-block"
+              >
+                View Profile
+              </Link>
+            </li>
           ))}
-        </div>
-      )}
+        </ul>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">Facilities</h2>
+        <input
+          type="text"
+          placeholder="Search by name, city, or state..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="border p-2 rounded w-full max-w-md mb-4"
+        />
+        {loading ? (
+          <p>Loading facilities...</p>
+        ) : (
+          <ul className="space-y-4">
+            {filtered.map(fac => (
+              <li key={fac._id} className="border p-4 rounded shadow bg-white dark:bg-gray-900">
+                <h3 className="font-bold text-lg">{fac.name}</h3>
+                <p>{fac.address?.city}, {fac.address?.state}</p>
+                <p className="text-xs text-gray-500">{fac.insuranceAccepted?.join(', ')}</p>
+                <Link
+                  to={`/facilities/${fac._id}`}
+                  className="text-blue-600 hover:underline text-sm mt-2 inline-block"
+                >
+                  View Details
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

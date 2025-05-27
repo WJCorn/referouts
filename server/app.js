@@ -15,6 +15,7 @@ const adminRoute = require('./routes/admin');
 const usersRoute = require('./routes/users'); // ✅ User route
 const importCsvRoute = require('./routes/import/csv');
 const importSfRoute = require('./routes/import/salesforce');
+const referralMatchesRoute = require('./routes/referralMatches');
 
 
 const app = express();
@@ -49,6 +50,7 @@ app.use('/test', testRoute);
 app.use('/admin', adminRoute);
 app.use('/import/csv', importCsvRoute);
 app.use('/import/salesforce', importSfRoute);
+app.use('/api/referrals', referralMatchesRoute);
 
 // Health check
 app.get('/ping', (req, res) => res.send('pong'));
