@@ -1,21 +1,27 @@
-function normalizeFacility(raw = {}, mapping = {}, orgId = '', source = '') {
-  const get = (field) => raw[mapping[field]] || '';
-
+module.exports = function normalizeFacility(row, mapping = {}, orgId = 'defaultOrg', source = 'csv') {
   return {
-    name: get('name'),
+    name: row[mapping.name] || row['Facility Name'] || '',
     address: {
-      street: get('address'),
-      city: get('city'),
-      state: get('state'),
-      zip: get('zip'),
+      street: row[mapping.street] || row['Street'] || '',
+      city: row[mapping.city] || row['City'] || '',
+      state: row[mapping.state] || row['State'] || '',
+      zip: row[mapping.zip] || row['ZIP'] || '',
     },
-    phone: get('phone'),
-    email: get('email'),
-    website: get('website'),
-    insuranceAccepted: get('insurances').split(',').map(i => i.trim()).filter(Boolean),
-    levelsOfCare: get('levelsOfCare').split(',').map(l => l.trim()).filter(Boolean),
-    services: get('services').split(',').map(s => s.trim()).filter(Boolean),
-    providerId: null,       // Set in admin UI or matched by logic later
-    parentNetwork: null,    // Set in admin UI if facility is part of a network
+    phone: row[mapping.phone] || row['Phone'] || '',
+    email: row[mapping.email] || row['Email'] || '',
+    website: row[mapping.website] || row['Website'] || '',
+    insuranceAccepted: row[mapping.insuranceAccepted]
+      ? row[mapping.insuranceAccepted].split(',').map(s => s.trim())
+      : [],
+    levelsOfCare: row[mapping.levelsOfCare]
+      ? row[mapping.levelsOfCare].split(',').map(s => s.trim())
+      : [],
+    services: row[mapping.services]
+      ? row[mapping.services].split(',').map(s => s.trim())
+      : [],
+    providerId: null,
+    parentNetwork: null,
+    source,
+    orgId,
   };
-}
+};
