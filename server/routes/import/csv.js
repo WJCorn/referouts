@@ -3,7 +3,7 @@ const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
-const normalizeFacility = require('../utils/normalizeFacility');
+const normalizeFacility = require('../../utils/normalizeFacility');
 const Facility = require('../../models/Facility');
 
 const router = express.Router();
