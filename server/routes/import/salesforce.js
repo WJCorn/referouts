@@ -1,5 +1,5 @@
 const express = require('express');
-const normalizeFacility = require('../utils/normalizeFacility');
+const normalizeFacility = require('../../utils/normalizeFacility');
 
 const router = express.Router();
 
